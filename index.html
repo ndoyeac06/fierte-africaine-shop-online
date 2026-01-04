@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fierté Africaine</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style>
+:root{--marron:#6b3e26;--beige:#f5f0e6;--marron-fonce:#4a2a1a}
+body{margin:0;font-family:Segoe UI,Arial;background:var(--beige)}
+header{background:var(--marron);padding:12px 25px;display:flex;justify-content:space-between;align-items:center;position:fixed;width:100%;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:12px;color:var(--beige)}
+.logo img{width:55px;height:55px;border-radius:50%;background:var(--beige);padding:5px}
+nav a{color:var(--beige);margin-left:20px;text-decoration:none;font-weight:bold;cursor:pointer}
+section{display:none;padding:100px 20px 80px;max-width:1100px;margin:auto;opacity:0;transform:translateY(20px);transition:0.8s;}
+section.active{display:block;opacity:1;transform:translateY(0)}
+h1,h2{color:var(--marron)}
+form{background:white;padding:25px;border-radius:18px;max-width:500px;margin-top:30px}
+input,select,button{width:100%;padding:12px;margin-bottom:12px;border-radius:8px;border:1px solid #ccc}
+select{cursor:pointer;}
+button{background:var(--marron);color:white;font-weight:bold;border:none;cursor:pointer}
+button:disabled{background:#aaa}
+.form-row{display:flex;gap:10px;flex-wrap:wrap;}
+.form-row select, .form-row input{flex:1 1 48%;}
+.whatsapp{position:fixed;bottom:20px;right:20px;background:#25D366;color:white;padding:12px 20px;border-radius:30px;text-decoration:none;font-weight:bold}
+#welcome{position:fixed;inset:0;background:linear-gradient(135deg,#6b3e26,#8a5a3c);display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;z-index:9999}
+#welcome img{width:130px;height:130px;border-radius:50%;background:white;padding:10px;margin-bottom:20px}
+#welcome h1{color:var(--marron-fonce);font-size:38px;font-weight:800}
+#welcome button{padding:12px 30px;border:none;border-radius:30px;font-weight:bold;cursor:pointer;background:var(--beige);color:var(--marron)}
+.presentation{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}
+.presentation img{width:100%;object-fit:contain;border-radius:15px;background:#f5f0e6}
+.presentation-text{margin-top:20px;font-size:16px;line-height:1.6}
+.produit-container{border-radius:18px;background:white;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,.08);text-align:center;margin-bottom:30px}
+.main-image{width:100%;max-height:350px;object-fit:contain;border-radius:15px;background:#f5f0e6;margin-bottom:10px}
+.thumbnails{display:flex;justify-content:center;gap:10px;overflow-x:auto;}
+.thumbnails img{width:80px;height:80px;object-fit:contain;border-radius:10px;cursor:pointer}
+footer{text-align:center;padding:15px;background:var(--marron);color:var(--beige);margin-top:20px}
+@media (max-width:768px){
+.presentation{grid-template-columns:1fr;gap:15px;}
+.produits{grid-template-columns:1fr;}
+.thumbnails{justify-content:flex-start;gap:10px;}
+section{padding:120px 15px 100px;}
+form{padding:15px;}
+#welcome h1{font-size:30px;}
+#welcome img{width:100px;height:100px;}
+.form-row select, .form-row input{flex:1 1 100%;}
+}
+@media (max-width:480px){
+header{flex-direction:column;align-items:flex-start;padding:10px 15px;}
+nav a{margin-left:0;margin-top:8px;}
+.main-image{max-height:250px;}
+.thumbnails img{width:60px;height:60px;}
+#welcome h1{font-size:26px;}
+}
+</style>
+</head>
+
+<body>
+
+<div id="welcome">
+  <img src="logo fa.jpeg">
+  <h1>Fierté Africaine</h1>
+  <p style="color:white">La mode qui célèbre l’identité africaine</p>
+  <button onclick="entrerSite()">Entrer</button>
+</div>
+
+<header>
+  <div class="logo">
+    <img src="logo fa.jpeg">
+    <span>Fierté Africaine</span>
+  </div>
+  <nav>
+    <a onclick="show('home')">Accueil</a>
+    <a onclick="show('shop')">Boutique</a>
+  </nav>
+</header>
+
+<section id="home">
+  <h1>Bienvenue chez Fierté Africaine</h1>
+  <p class="presentation-text">
+    Fierté Africaine est une marque engagée qui met en valeur l’identité,
+    la culture et l’élégance africaine à travers des vêtements modernes,
+    authentiques et de qualité.
+  </p>
+  <div class="presentation">
+    <img src="shooting.jpeg">
+    <img src="shooting1.jpeg">
+    <img src="shooting 4.jpeg">
+  </div>
+</section>
+
+<section id="shop">
+<h2>Boutique en ligne</h2>
+
+<div class="produit-container">
+  <h3>Tee-shirt Fierté Africaine</h3>
+  <img id="main-tee" src="shooting.jpeg" class="main-image">
+  <div class="thumbnails">
+    <img src="shooting.jpeg" onclick="document.getElementById('main-tee').src=this.src">
+    <img src="shooting1.jpeg" onclick="document.getElementById('main-tee').src=this.src">
+    <img src="shooting 4.jpeg" onclick="document.getElementById('main-tee').src=this.src">
+  </div>
+  <p><b>8 000 FCFA</b></p>
+  <button onclick="choisir('Tee-shirt',8000)">Choisir ce produit</button>
+</div>
+
+<div class="produit-container">
+  <h3>Pull Fierté Africaine</h3>
+  <img id="main-pull" src="pull marron.jpeg" class="main-image">
+  <div class="thumbnails">
+    <img src="pull marron.jpeg" onclick="document.getElementById('main-pull').src=this.src">
+    <img src="WhatsApp Image 2026-01-03 at 19.53.30.jpeg" onclick="document.getElementById('main-pull').src=this.src">
+    <img src="WhatsApp Image 2026-01-04 at 12.49.29.jpeg" onclick="document.getElementById('main-pull').src=this.src">
+  </div>
+  <p><b>8 000 FCFA</b></p>
+  <button onclick="choisir('Pull',8000)">Choisir ce produit</button>
+</div>
+
+<form id="commandeForm">
+  <input id="nom" placeholder="Nom complet" required>
+  <input id="tel" placeholder="Téléphone" required>
+  <input id="prod" placeholder="Produit" readonly>
+  <input id="qte" type="number" value="1" min="1" onchange="calcul()">
+
+  <div class="form-row">
+    <select id="taille" required>
+      <option value="">Sélectionnez la taille</option>
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+      <option value="2XL">2XL</option>
+      <option value="3XL">3XL</option>
+    </select>
+    <select id="couleur" required>
+      <option value="">Sélectionnez la couleur</option>
+      <option value="Marron">Marron</option>
+      <option value="Blanc">Blanc</option>
+      <option value="Noir">Noir</option>
+      <option value="Beige">Beige</option>
+    </select>
+  </div>
+
+  <div class="form-row">
+    <select id="livraison" onchange="toggleLieu()">
+      <option value="Non">Pas de livraison</option>
+      <option value="Oui">Livraison</option>
+    </select>
+    <input id="lieu" placeholder="Lieu de livraison">
+  </div>
+
+  <p><b>Total : <span id="total">0</span> FCFA</b></p>
+
+  <button type="button" onclick="payerWave()">Payer avec Wave</button>
+  <button type="button" onclick="confirmerPaiement()">J’ai payé (Wave)</button>
+  <button type="button" id="factureBtn" onclick="facture()" disabled>Télécharger la facture</button>
+  <p id="resultat"></p>
+</form>
+</section>
+
+<a class="whatsapp" href="https://wa.me/221783000823" target="_blank">WhatsApp</a>
+<footer>© 2026 Fierté Africaine. Tous droits réservés.</footer>
+
+<script>
+const WAVE_LINK="https://pay.wave.com/m/M_sn_HSbhSDDjenFD/c/sn/";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwaYSQmGpcqFlCit1cHKi_OA7EQIT1uapikjmSgzbMYcb5iR4B4XWGLEN9IKu3C-FZW/exec";
+let prix=0, paiementOK=false;
+
+function entrerSite(){welcome.style.opacity=0;setTimeout(()=>{welcome.style.display="none";show("home")},800);}
+function show(id){document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+function choisir(p,pv){prod.value=p;prix=pv;calcul();}
+function calcul(){total.innerText = prix*qte.value;}
+function toggleLieu(){document.getElementById("lieu").style.display=(livraison.value==="Oui")?"block":"none";}
+function payerWave(){if(total.innerText==0){alert("Choisissez un produit");return;}if(livraison.value==="Oui"&&lieu.value.trim()===""){alert("Veuillez remplir le lieu de livraison");return;}window.open(WAVE_LINK,"_blank");}
+
+// Fonction avec enregistrement sur Google Sheet
+function confirmerPaiement(){
+  if(!nom.value || !tel.value || !prod.value || !taille.value || !couleur.value){
+    alert("Veuillez remplir tous les champs du formulaire"); return;
+  }
+  if(livraison.value==="Oui" && lieu.value.trim()===""){
+    alert("Veuillez remplir le lieu de livraison"); return;
+  }
+  fetch(SCRIPT_URL,{
+    method:"POST",
+    body: JSON.stringify({
+      nom: nom.value,
+      telephone: tel.value,
+      produit: prod.value,
+      quantite: qte.value,
+      taille: taille.value,
+      couleur: couleur.value,
+      livraison: livraison.value,
+      lieu: lieu.value,
+      total: total.innerText,
+      paiement: "Wave Business"
+    })
+  }).then(res=>{
+    if(res.ok){
+      paiementOK=true;
+      factureBtn.disabled=false;
+      resultat.innerText="Paiement confirmé ✔️ Commande enregistrée";
+    } else { alert("Erreur lors de l'enregistrement, réessayez."); }
+  }).catch(err=>{
+    console.error(err); alert("Erreur connexion ou script Google Sheet.");
+  });
+}
+
+function facture(){
+  if(!paiementOK){alert("Veuillez confirmer le paiement d'abord"); return;}
+  const {jsPDF}=window.jspdf;
+  const d=new jsPDF();
+  d.text("FIERTE AFRICAINE",105,20,{align:"center"});
+  d.text(`Nom : ${nom.value}`,20,40);
+  d.text(`Produit : ${prod.value}`,20,50);
+  d.text(`Quantité : ${qte.value}`,20,60);
+  d.text(`Taille : ${taille.value}`,20,70);
+  d.text(`Couleur : ${couleur.value}`,20,80);
+  d.text(`Livraison : ${livraison.value}`,20,90);
+  if(livraison.value==="Oui"){d.text(`Lieu : ${lieu.value}`,20,100);}
+  d.text(`Total : ${total.innerText} FCFA`,20,110);
+  d.save("facture_fierte_africaine.pdf");
+}
+</script>
+</body>
+</html>
