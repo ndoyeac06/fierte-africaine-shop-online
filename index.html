@@ -28,14 +28,62 @@ button:disabled{background:#aaa}
 #welcome img{width:130px;height:130px;border-radius:50%;background:white;padding:10px;margin-bottom:20px}
 #welcome h1{color:var(--marron-fonce);font-size:38px;font-weight:800}
 #welcome button{padding:12px 30px;border:none;border-radius:30px;font-weight:bold;cursor:pointer;background:var(--beige);color:var(--marron)}
-.presentation{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:20px}
-.presentation img{width:100%;object-fit:contain;border-radius:15px;background:#f5f0e6}
-.presentation-text{margin-top:20px;font-size:16px;line-height:1.6}
+
+.lookbook {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+}
+
+.lookbook-item {
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease;
+}
+
+.lookbook-item img,
+.lookbook-item video {
+  width: 100%;
+  border-radius: 15px;
+  background: #f5f0e6;
+  object-fit: cover;
+}
+
+.overlay-text {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(107,62,38,0.75);
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  max-width: 90%;
+}
+
+.lookbook-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media(min-width:768px){
+  .lookbook-item:nth-child(odd) {
+    justify-self: start;
+  }
+  .lookbook-item:nth-child(even) {
+    justify-self: end;
+  }
+}
+
 .produit-container{border-radius:18px;background:white;padding:15px;box-shadow:0 8px 20px rgba(0,0,0,.08);text-align:center;margin-bottom:30px}
 .main-image{width:100%;max-height:350px;object-fit:contain;border-radius:15px;background:#f5f0e6;margin-bottom:10px}
 .thumbnails{display:flex;justify-content:center;gap:10px;overflow-x:auto;}
 .thumbnails img{width:80px;height:80px;object-fit:contain;border-radius:10px;cursor:pointer}
 footer{text-align:center;padding:15px;background:var(--marron);color:var(--beige);margin-top:20px}
+
 @media (max-width:768px){
 .presentation{grid-template-columns:1fr;gap:15px;}
 .produits{grid-template-columns:1fr;}
@@ -83,11 +131,58 @@ nav a{margin-left:0;margin-top:8px;}
     la culture et l’élégance africaine à travers des vêtements modernes,
     authentiques et de qualité.
   </p>
-  <div class="presentation">
-    <img src="shooting.jpeg">
-    <img src="shooting1.jpeg">
-    <img src="shooting 4.jpeg">
+
+  <!-- Lookbook -->
+  <div class="presentation lookbook">
+
+    <div class="lookbook-item">
+      <img src="shooting.jpeg">
+      <div class="overlay-text">Fierté Africaine célèbre l’élégance et l’authenticité à travers des créations inspirées de la culture africaine moderne.</div>
+    </div>
+
+    <div class="lookbook-item video-item">
+      <video src="video1.mp4" controls></video>
+      <div class="overlay-text">Chaque pièce est conçue avec passion pour refléter l’identité, la fierté et le style africain contemporain.</div>
+    </div>
+
+    <div class="lookbook-item">
+      <img src="shooting1.jpeg">
+      <div class="overlay-text">Nos collections allient tradition et modernité pour offrir des vêtements uniques, élégants et confortables.</div>
+    </div>
+
+    <div class="lookbook-item video-item">
+      <video src="video2.mp4" controls></video>
+      <div class="overlay-text">Fierté Africaine met en avant le savoir-faire local et la qualité dans chaque détail de fabrication.</div>
+    </div>
+
+    <div class="lookbook-item">
+      <img src="shooting 4.jpeg">
+      <div class="overlay-text">Porter Fierté Africaine, c’est affirmer son identité et valoriser la richesse de la culture africaine.</div>
+    </div>
+
+    <div class="lookbook-item video-item">
+      <video src="video3.mp4" controls></video>
+      <div class="overlay-text">Une marque engagée, pensée pour celles et ceux qui portent l’Afrique avec fierté et élégance.</div>
+    </div>
+
+    <div class="lookbook-item">
+      <img src="shooting5.jpeg">
+      <div class="overlay-text">Découvrez nos nouvelles créations qui fusionnent style moderne et inspiration africaine.</div>
+    </div>
+
+    <div class="lookbook-item">
+      <img src="shooting6.jpeg">
+      <div class="overlay-text">Chaque vêtement raconte une histoire et reflète notre passion pour la culture africaine.</div>
+    </div>
+
+    <div class="lookbook-item">
+      <img src="shooting7.jpeg">
+      <div class="overlay-text">Fierté Africaine, c’est l’alliance de l’authenticité, de la modernité et du confort.</div>
+    </div>
+
   </div>
+  <!-- Fin Lookbook -->
+
 </section>
 
 <section id="shop">
@@ -167,14 +262,26 @@ const WAVE_LINK="https://pay.wave.com/m/M_sn_HSbhSDDjenFD/c/sn/";
 const SCRIPT_URL="https://script.google.com/macros/s/AKfycbwaYSQmGpcqFlCit1cHKi_OA7EQIT1uapikjmSgzbMYcb5iR4B4XWGLEN9IKu3C-FZW/exec";
 let prix=0, paiementOK=false;
 
-function entrerSite(){welcome.style.opacity=0;setTimeout(()=>{welcome.style.display="none";show("home")},800);}
-function show(id){document.querySelectorAll("section").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");}
+function entrerSite(){
+  welcome.style.opacity=0;
+  setTimeout(()=>{
+    welcome.style.display="none";
+    show("home");
+  },800);
+}
+
+function show(id){
+  document.querySelectorAll("section").forEach(s=>{
+    s.classList.remove("active");
+  });
+  document.getElementById(id).classList.add("active");
+}
+
 function choisir(p,pv){prod.value=p;prix=pv;calcul();}
 function calcul(){total.innerText = prix*qte.value;}
 function toggleLieu(){document.getElementById("lieu").style.display=(livraison.value==="Oui")?"block":"none";}
 function payerWave(){if(total.innerText==0){alert("Choisissez un produit");return;}if(livraison.value==="Oui"&&lieu.value.trim()===""){alert("Veuillez remplir le lieu de livraison");return;}window.open(WAVE_LINK,"_blank");}
 
-// Fonction avec enregistrement sur Google Sheet
 function confirmerPaiement(){
   if(!nom.value || !tel.value || !prod.value || !taille.value || !couleur.value){
     alert("Veuillez remplir tous les champs du formulaire"); return;
@@ -222,6 +329,20 @@ function facture(){
   d.text(`Total : ${total.innerText} FCFA`,20,110);
   d.save("facture_fierte_africaine.pdf");
 }
+
+// Animation lookbook
+function animateLookbook() {
+  const items = document.querySelectorAll('.lookbook-item');
+  const windowBottom = window.innerHeight + window.scrollY;
+  items.forEach(item => {
+    if(item.getBoundingClientRect().top + window.scrollY < windowBottom - 50){
+      item.classList.add('visible');
+    }
+  });
+}
+window.addEventListener('scroll', animateLookbook);
+window.addEventListener('load', animateLookbook);
 </script>
+
 </body>
 </html>
