@@ -264,16 +264,11 @@ let prix=0, paiementOK=false;
 
 function entrerSite(){
   welcome.style.opacity=0;
-  setTimeout(()=>{
-    welcome.style.display="none";
-    show("home");
-  },800);
+  setTimeout(()=>{welcome.style.display="none";show("home");},800);
 }
 
 function show(id){
-  document.querySelectorAll("section").forEach(s=>{
-    s.classList.remove("active");
-  });
+  document.querySelectorAll("section").forEach(s=>{s.classList.remove("active");});
   document.getElementById(id).classList.add("active");
 }
 
@@ -286,9 +281,7 @@ function confirmerPaiement(){
   if(!nom.value || !tel.value || !prod.value || !taille.value || !couleur.value){
     alert("Veuillez remplir tous les champs du formulaire"); return;
   }
-  if(livraison.value==="Oui" && lieu.value.trim()===""){
-    alert("Veuillez remplir le lieu de livraison"); return;
-  }
+  if(livraison.value==="Oui" && lieu.value.trim()===""){alert("Veuillez remplir le lieu de livraison"); return;}
   fetch(SCRIPT_URL,{
     method:"POST",
     body: JSON.stringify({
@@ -304,30 +297,63 @@ function confirmerPaiement(){
       paiement: "Wave Business"
     })
   }).then(res=>{
-    if(res.ok){
-      paiementOK=true;
-      factureBtn.disabled=false;
-      resultat.innerText="Paiement confirmé ✔️ Commande enregistrée";
-    } else { alert("Erreur lors de l'enregistrement, réessayez."); }
-  }).catch(err=>{
-    console.error(err); alert("Erreur connexion ou script Google Sheet.");
-  });
+    if(res.ok){paiementOK=true;factureBtn.disabled=false;resultat.innerText="Paiement confirmé ✔️ Commande enregistrée";}
+    else { alert("Erreur lors de l'enregistrement, réessayez."); }
+  }).catch(err=>{console.error(err); alert("Erreur connexion ou script Google Sheet.");});
 }
 
+// ----- FACTURE AMELIOREE -----
 function facture(){
   if(!paiementOK){alert("Veuillez confirmer le paiement d'abord"); return;}
-  const {jsPDF}=window.jspdf;
-  const d=new jsPDF();
-  d.text("FIERTE AFRICAINE",105,20,{align:"center"});
-  d.text(`Nom : ${nom.value}`,20,40);
-  d.text(`Produit : ${prod.value}`,20,50);
-  d.text(`Quantité : ${qte.value}`,20,60);
-  d.text(`Taille : ${taille.value}`,20,70);
-  d.text(`Couleur : ${couleur.value}`,20,80);
-  d.text(`Livraison : ${livraison.value}`,20,90);
-  if(livraison.value==="Oui"){d.text(`Lieu : ${lieu.value}`,20,100);}
-  d.text(`Total : ${total.innerText} FCFA`,20,110);
-  d.save("facture_fierte_africaine.pdf");
+
+  const { jsPDF } = window.jspdf;
+  const d = new jsPDF();
+
+  const factureNum = "FA-" + Date.now();
+  const date = new Date().toLocaleDateString("fr-FR");
+
+  // Cadre
+  d.rect(10, 10, 190, 277);
+
+  // Logo
+  const logo = new Image();
+  logo.src = "logo fa.jpeg";
+
+  logo.onload = function () {
+    d.addImage(logo, "JPEG", 85, 15, 40, 40);
+
+    d.setFontSize(16);
+    d.text("FACTURE", 105, 65, { align: "center" });
+
+    d.setFontSize(11);
+    d.text(`Numéro : ${factureNum}`, 20, 80);
+    d.text(`Date : ${date}`, 140, 80);
+
+    d.text(`Nom client : ${nom.value}`, 20, 95);
+    d.text(`Téléphone : ${tel.value}`, 20, 105);
+
+    d.text(`Produit : ${prod.value}`, 20, 120);
+    d.text(`Quantité : ${qte.value}`, 20, 130);
+    d.text(`Taille : ${taille.value}`, 20, 140);
+    d.text(`Couleur : ${couleur.value}`, 20, 150);
+    d.text(`Livraison : ${livraison.value}`, 20, 160);
+
+    if(livraison.value === "Oui"){d.text(`Lieu : ${lieu.value}`, 20, 170);}
+
+    d.setFontSize(13);
+    d.text(`TOTAL : ${total.innerText} FCFA`, 20, 190);
+
+    d.setFontSize(10);
+    d.text("Veuillez capturer cette facture et l’envoyer sur WhatsApp pour validation.", 105, 230, { align: "center", maxWidth: 160 });
+
+    d.text("Merci pour votre confiance – Fierté Africaine", 105, 250, { align: "center" });
+
+    const fileName = `facture_${factureNum}.pdf`;
+    d.save(fileName);
+
+    const message = encodeURIComponent(`Bonjour, veuillez trouver ma facture ${factureNum}. Merci.`);
+    window.open(`https://wa.me/221783000823?text=${message}`, "_blank");
+  };
 }
 
 // Animation lookbook
@@ -335,9 +361,7 @@ function animateLookbook() {
   const items = document.querySelectorAll('.lookbook-item');
   const windowBottom = window.innerHeight + window.scrollY;
   items.forEach(item => {
-    if(item.getBoundingClientRect().top + window.scrollY < windowBottom - 50){
-      item.classList.add('visible');
-    }
+    if(item.getBoundingClientRect().top + window.scrollY < windowBottom - 50){item.classList.add('visible');}
   });
 }
 window.addEventListener('scroll', animateLookbook);
